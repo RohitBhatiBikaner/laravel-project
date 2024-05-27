@@ -15,7 +15,7 @@
 
     <br>
     <div><a href="/course/create" class="btn btn-success ">New Course</a> <br> <br>
-        <h1 class="text-center mb-3 alert alert-dark ">List Of Courses</h1>
+        <h1 class="text-center">List Of Courses</h1>
     </div>
     
     <br>
@@ -68,6 +68,24 @@
 </div>
 <!-- HTML !-->
   <style>
+    h1 {
+    font-size: 70px;
+    font-weight: 600;
+    font-family: 'Roboto', sans-serif;
+    color: #b393d3;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 0px #957dad,
+    1px 2px 0px #957dad,
+    1px 3px 0px #957dad,
+    1px 4px 0px #957dad,
+    1px 5px 0px #957dad,
+    1px 6px 0px #957dad,
+    1px 10px 5px rgba(16, 16, 16, 0.5),
+    1px 15px 10px rgba(16, 16, 16, 0.4),
+    1px 20px 30px rgba(16, 16, 16, 0.3),
+    1px 25px 50px rgba(16, 16, 16, 0.2);
+}
+
   /* CSS */
   .button-82-pushable {
     position: relative;
@@ -171,5 +189,8 @@
   .button-82-pushable:focus:not(:focus-visible) {
     outline: none;
   }
+  
+
+  
 </style>
 @endsection
