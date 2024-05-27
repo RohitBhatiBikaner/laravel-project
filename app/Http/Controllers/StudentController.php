@@ -44,8 +44,14 @@ class StudentController extends Controller
         //
         $request->validate([
             'name'=> "required|min:2|max:40",
-            'mobile'=> 'required'
+            'mobile'=> 'required',
+            'photo'=> 'required|file|image|mimes:jpeg,jpg|max:2048'
         ]);
+        $fileName= time() . '_' . $request->photo->getClientOriginalName();
+        
+
+        
+        $request->photo->move(public_path('photo'), $fileName);
         $info=[
             'name' => $request->name,
             'mobile'=>$request->mobile,
@@ -57,7 +63,8 @@ class StudentController extends Controller
             'address'=>$request->address,
             'dob'=>$request->dob,
             'doj'=>$request->doj,
-        ];
+            'photo'=>$request->photo
+        ]; 
         $obj=Student::create($info);
         if(count($request->course_id)>0)
         foreach($request->course_id as $cid){

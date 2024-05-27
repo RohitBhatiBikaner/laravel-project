@@ -13,7 +13,7 @@
    @foreach($errors->all() as $e)
    <div class="alert alert-danger">{{$e}}</div>
    @endforeach
-    <form method="post" action="/student/">
+    <form method="post" action="/student/" enctype="multipart/form-data" >
     @csrf
     <div class="mb-3">
       <h4>  <label for="name" style="color:#960dad">Select Courses:</label></h4>
@@ -79,7 +79,12 @@
            <h4> <label for="address" style="color:#960dad" >Address:</label> </h4>
             <textarea name="address"  rows="5" class="form-control" placeholder="Enter Address Here"></textarea>
         </div>
-   <br>     
+   <br> 
+   <div>
+        <h4><label for="photo" style="color:#960dad" > Photo:</label></h4>
+        <input type="file" name="photo" id="photo" class="form-control" accept="image/jpeg,image/jpg" >
+    </div>
+    <br>    
    <div class="mb-3 text-center " id="btn" >
        <button class="button-73">SUBMIT</button>
    

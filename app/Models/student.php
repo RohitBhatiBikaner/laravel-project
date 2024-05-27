@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class student extends Model
 {
     use HasFactory;
-    protected $fillable=['name','mobile','parent_name','parent_mobile','gender','email','referance_by','address','dob','doj'];
+    protected $fillable=['name','mobile','parent_name','parent_mobile','gender','email','referance_by','address','dob','doj','photo'];
 
         function allcourse(){
             return $this->hasMany(studentcourse::class,'student_id','id');
