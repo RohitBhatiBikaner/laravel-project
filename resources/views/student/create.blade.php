@@ -82,7 +82,7 @@
    <br> 
    <div>
         <h4><label for="photo" style="color:#960dad" > Photo:</label></h4>
-        <input type="file" name="photo" id="photo" class="form-control" accept="image/jpeg,image/jpg" >
+        <input type="file" name="photo" id="photo" class="form-control" accept="image/jpeg,image/jpg"  >
     </div>
     <br>    
    <div class="mb-3 text-center " id="btn" >

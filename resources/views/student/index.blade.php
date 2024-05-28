@@ -31,7 +31,7 @@
             <tr>
                 <td>{{$loop->iteration}}</td>
                 <td>
-                    <a href="/course/{{$info['id']}}/edit"class="link-offset-2 link-underline-opacity-0">
+                    <a href="/student/{{$info['id']}}/edit"class="link-offset-2 link-underline-opacity-0">
                         {{$info['name']}}
                       </a>
                 </td>

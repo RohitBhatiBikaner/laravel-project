@@ -99,6 +99,8 @@ class StudentController extends Controller
     public function edit(student $student)
     {
         //
+        return view('student.edit',['sinfo'=>$student]);
+
     }
 
     /**
@@ -111,6 +113,12 @@ class StudentController extends Controller
     public function update(Request $request, student $student)
     {
         //
+        $student->name=$request->name;
+        $student->mobile=$request->mobile;
+        $student->course=$request->course;
+        $student->$request->doj;
+        $student->save();
+        return redirect('/student')->with('grt','Data Update Successfully');
     }
 
     /**

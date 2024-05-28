@@ -23,12 +23,11 @@
     </div>
     
     <div class="mb-3 text-center ">
-        {{-- <button class="btn btn-success">SAVE</button> --}}
         <button class="button-82-pushable" role="button">
             <span class="button-82-shadow"></span>
             <span class="button-82-edge"></span>
             <span class="button-82-front text">
-              Save
+              UPDATE
             </span>
           </button>
          
