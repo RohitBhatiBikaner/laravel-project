@@ -6,6 +6,7 @@ use App\Models\student;
 use App\Models\studentcourse;
 use Illuminate\Http\Request;
 use App\Models\course;
+use App\Models\student_media;
 
 class StudentController extends Controller
 {
@@ -45,14 +46,9 @@ class StudentController extends Controller
         $request->validate([
             'name'=> "required|min:2|max:40",
             'mobile'=> 'required',
-            'photo'=> 'required|file|image|mimes:jpeg,jpg|max:2048'
+            //'photo'=> 'required|file|image|mimes:jpeg,jpg|max:2048'
         ]);
-        $fileName= time() . '_' . $request->photo->getClientOriginalName();
-        
-
-        
-        $request->photo->move(public_path('photo'), $fileName);
-        $info=[
+                $info=[
             'name' => $request->name,
             'mobile'=>$request->mobile,
             'parent_name'=>$request->parent_name,
@@ -66,6 +62,21 @@ class StudentController extends Controller
             'photo'=>$request->photo
         ]; 
         $obj=Student::create($info);
+        foreach($request->photo as $image){
+            $filename=[];
+            $imagename=$image->getClientOriginalName();
+            $image->move(public_path('photo'),$imagename);
+        }
+        $images= json_encode($filename);
+        foreach($request->photo as $img){
+            $isave=[
+                'student_id'=>$obj->id,
+                'image'=>$img
+
+            ];
+            student_media::create($isave);
+        }
+
         if(count($request->course_id)>0)
         foreach($request->course_id as $cid){
            echo $cid;
@@ -98,8 +109,9 @@ class StudentController extends Controller
      */
     public function edit(student $student)
     {
-        //
-        return view('student.edit',['sinfo'=>$student]);
+        // $sdata=course::all(['id','name']);
+        $course=array_column($student->allcourse->toArray(),'course_id');
+        return view('student.edit',['info'=>$student,'cdata'=>course::all(['id','name']),'course'=>$course]);
 
     }
 
@@ -113,11 +125,32 @@ class StudentController extends Controller
     public function update(Request $request, student $student)
     {
         //
-        $student->name=$request->name;
-        $student->mobile=$request->mobile;
-        $student->course=$request->course;
-        $student->$request->doj;
-        $student->save();
+        $request->validate([
+            'name'=> "required|min:2|max:40",
+            'mobile'=> 'required',
+            // 'photo'=> 'file|image|mimes:jpeg,jpg|max:2048'
+        ]);
+        $fileName=$student->photo;
+        if ($request->photo){
+            if($fileName){
+                unlink("\photo\$fileaName");
+            }
+            $fileName=time() . '_' . $request->photo->getClientOriginalName();
+            $request->photo->move(public_path('photo'),$fileName);
+        }
+            $student->name= $request->name;
+            $student->mobile=$request->mobile;
+            $student->parent_name=$request->parent_name;
+            $student->parent_mobile=$request->parent_mobile;
+            $student->gender=$request->gender;
+            $student->email=$request->email;
+            $student->referance_by=$request->referance_by;
+            $student->address=$request->address;
+            $student->dob=$request->dob;
+            $student->doj=$request->doj;
+            // $student->photo=$request->photo;
+            $student->save();
+        
         return redirect('/student')->with('grt','Data Update Successfully');
     }
 
@@ -130,5 +163,7 @@ class StudentController extends Controller
     public function destroy(student $student)
     {
         //
+        $student->delete();
+        return redirect('/student')->with('err','Data Deleted Successfully');
     }
 }

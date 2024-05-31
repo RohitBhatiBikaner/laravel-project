@@ -25,8 +25,6 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->date('dob')->nullable();
             $table->date('doj')->nullable();
-            $table->string('photo')->nullable();
-
             $table->timestamps();
         });
     }

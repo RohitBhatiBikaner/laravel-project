@@ -1,168 +1,180 @@
 @extends('layouts.app')
 @section('content')
-    
-<div class="container border border-dark " style="box-shadow: 1px 2px 10px">
-    <h1 class="text-center" >Student Edit</h1>
-    <form method="post" action="/student/{{$sinfo['id']}}">
-    @csrf
-    @method('patch')
-    <div class="mb-3">
-      <br>
-        <h4><label for="name" style="color: #960dad" >Student Name:</label></h4>
-        <input type="text" class="form-control"name="name" id="name" placeholder="Enter Category Name" required value="{{$sinfo['name']}}">
+    <style>
+        .dgird {
+            border: 1px solid #ddd;
+            padding: 5px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+        }
+    </style>
+    <div class="container borderd" style="box-shadow: 1px 2px 10px">
+        <h1 class="text-center ">Student Form</h1>
+        @foreach ($errors->all() as $e)
+            <div class="alert alert-danger">{{ $e }}</div>
+        @endforeach
+        <form method="post" action="/student/{{$info['id']}}" enctype="multipart/form-data">
+            @csrf
+            @method('put')
+            <div class="mb-3">
+                <h4> <label for="name" style="color:#960dad">Select Courses:</label></h4>
+                <div class="dgird" style="box-shadow: 2px 1px 5px">
+
+                    @foreach ($cdata as $cinfo)
+                        <div>
+                            <input type="checkbox" name="course_id[]"
+                        {{(in_array($cinfo['id'],$course))?"checked":""}}
+                            id="c{{ $cinfo['id'] }}" value="{{ $cinfo['id'] }}">
+                            <label for="c{{ $cinfo['id'] }}">
+                                {{ $cinfo['name'] }}
+                            </label>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+            <div>
+                <h4><label for="name" style="color: #960dad">Name:</label></h4>
+                <input type="text" name="name" id="name" value="{{$info['name']}}" class="form-control"
+                    placeholder="Enter Name" required>
+            </div> <br>
+            <div>
+                <h4><label for="mobile" style="color:#960dad ">Mobile:</label></h4>
+                <input type="text" name="mobile" id="mobile" class="form-control" value="{{$info['mobile']}}"
+                    accept="[0-9]{10}" placeholder="Enter Your Mobile Number" required>
+            </div>
+            <br>
+            <div>
+                <h4><label for="pname" style="color:#960dad">Parent Name:</label></h4>
+                <input type="text" name="parent_name" placeholder="Enter your Parent Name" id="pname"
+                    value="{{$info['parent_name']}}" class="form-control">
+            </div>
+            <br>
+            <div>
+                <h4><label for="pmobile" style="color:#960dad">Parent Mobile:</label></h4>
+                <input type="text" name="parent_mobile" placeholder="Enter Parent Mobile Number" id="pmobile"
+                    value="{{$info['parent_mobile']}}" class="form-control" accept="[0-9]{10}">
+            </div>
+            <br>
+            <div>
+                <h4><label for="gender" style="color:#960dad">Gender:</label></h4>
+                <div class="form-control">
+                    <input type="radio" checked value="male" name="gender" id="m">&nbsp <label
+                        for="m">Male</label>
+                    <input type="radio" value="female" name="gender" id="f" {{($info['gender']=='female')?"checked":""}}>&nbsp; <label for="f">Female</label>
+                </div>
+                <br>
+            </div>
+
+
+            <div>
+                <h4><label for="email" style="color:#960dad">Email:</label></h4>
+                <input type="email" name="email" class="form-control" value="{{$info['email']}}" placeholder="Enter Email ID" id="email">
+            </div>
+            <br>
+            <div>
+                <h4><label for="referance_by" style="color:#960dad">Referance By:</label></h4>
+                <input type="text" name="referance_by" value="{{$info['referance_by']}}"placeholder="Who Tell You About Axixa" id="referance_by"
+                    class="form-control">
+            </div>
+            <br>
+            <div>
+
+                <h4><label for="dob" style="color:#960dad">Date Of Birth:</label></h4>
+                <input type="date" name="dob" id="dob" class="form-control" value="{{$info['dob']}}"
+                    max="{{ date('Y-m-d', time() - 86400 * 365.25 * 6) }}" required>
+            </div>
+            <br>
+            <h4><label for="doj" style="color:#960dad">Date Of Joining:</label></h4>
+            <input type="date" name="doj" id="doj" value="{{($info['doj'])?$info['doj']:date('Y-m-d',time())}}" class="form-control" 
+                max="{{(old('doj'))?old('doj'): date('Y-m-d') }}" required>
+            <div>
+                <h4> <label for="address" style="color:#960dad">Address:</label> </h4>
+                <textarea name="address" rows="5" class="form-control"  placeholder="Enter Address Here">{{$info['address']}}</textarea>
+            </div>
+            <br>
+            <div>
+                @if($info['photo'])
+            </div>
+            @endif
+            <img src="\photo\{{$info['photo']}}" height="100">
+            <div> 
+                <h4><label for="photo" style="color:#960dad"> Photo:</label></h4>
+                <input type="file" name="photo[]" multiple id="photo" class="form-control" accept="image/jpeg,image/jpg">
+            </div>
+            <br>
+            <div class="mb-3 text-center " id="btn">
+                <button class="button-73">SUBMIT</button>
+
+                <br>
+            </div>
+
+            <br>
     </div>
-    
-    <div class="mb-3">
-        <h4><label for="mobile" style="color: #960dad" > Mobile:</label></h4>
-        <input type="number" class="form-control"name="mobile" id="mobile" placeholder="Enter Mobile No" required value="{{$sinfo['mobile']}}">
+
+
+
+    </form>
     </div>
-    
-    <div class="mb-3">
-    <h4><label for="course" style="color: #960dad" > Courses:</label></h4>
-        <input type="text" class="form-control"name="name" id="course"  value="{{$sinfo['course']}}">
-    </div>
-    <div class="mb-3">
-        <h4><label for="doj" style="color: #960dad" > Date Of Joining</label></h4>
-        <input type="date" class="form-control"name="doj" id="doj"  value="{{$sinfo['doj']}}">
-    </div>
-    
-       
-</form>
+    <style>
+        .button-73 {
+            appearance: none;
+            background-color: #FFFFFF;
+            border-radius: 40em;
+            border-style: none;
+            box-shadow: #ADCFFF 0 -12px 6px inset;
+            box-sizing: border-box;
+            color: #000000;
+            cursor: pointer;
+            display: inline-block;
+            font-family: -apple-system, sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: -.24px;
+            margin: 0;
+            outline: none;
+            padding: 1rem 1.3rem;
+            quotes: auto;
+            text-align: center;
+            text-decoration: none;
+            transition: all .15s;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
 
-<div class="mb-3 text-center ">
-    {{-- <button class="btn btn-success">SAVE</button> --}}
-    <button class="button-82-pushable" role="button">
-        <span class="button-82-shadow"></span>
-        <span class="button-82-edge"></span>
-        <span class="button-82-front text">
-          UPDATE
-        </span>
-      </button>
-     
-</div>
+        .button-73:hover {
+            background-color: #FFC229;
+            box-shadow: #FF6314 0 -6px 8px inset;
+            transform: scale(1.125);
+        }
 
-<style>
-h1 {
-    font-size: 70px;
-    font-weight: 600;
-    font-family: 'Roboto', sans-serif;
-    color: #b393d3;
-    text-transform: uppercase;
-    text-shadow: 1px 1px 0px #957dad,
-    1px 2px 0px #957dad,
-    1px 3px 0px #957dad,
-    1px 4px 0px #957dad,
-    1px 5px 0px #957dad,
-    1px 6px 0px #957dad,
-    1px 10px 5px rgba(16, 16, 16, 0.5),
-    1px 15px 10px rgba(16, 16, 16, 0.4),
-    1px 20px 30px rgba(16, 16, 16, 0.3),
-    1px 25px 50px rgba(16, 16, 16, 0.2);
-}
+        .button-73:active {
+            transform: scale(1.025);
+        }
 
+        @media (min-width: 768px) {
+            .button-73 {
+                font-size: 1.5rem;
+                padding: .75rem 2rem;
+            }
+        }
 
-/* CSS */
-.button-82-pushable {
-  position: relative;
-  border: none;
-  background: transparent;
-  padding: 0;
-  cursor: pointer;
-  outline-offset: 4px;
-  transition: filter 250ms;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-}
-
-.button-82-shadow {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: 12px;
-  background: hsl(0deg 0% 0% / 0.25);
-  will-change: transform;
-  transform: translateY(2px);
-  transition:
-    transform
-    600ms
-    cubic-bezier(.3, .7, .4, 1);
-}
-
-.button-82-edge {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: 12px;
-  background: linear-gradient(
-    to left,
-    hsl(340deg 100% 16%) 0%,
-    hsl(340deg 100% 32%) 8%,
-    hsl(340deg 100% 32%) 92%,
-    hsl(340deg 100% 16%) 100%
-  );
-}
-
-.button-82-front {
-  display: block;
-  position: relative;
-  padding: 12px 27px;
-  border-radius: 12px;
-  font-size: 1.1rem;
-  color: white;
-  background: hsl(345deg 100% 47%);
-  will-change: transform;
-  transform: translateY(-4px);
-  transition:
-    transform
-    600ms
-    cubic-bezier(.3, .7, .4, 1);
-}
-
-@media (min-width: 768px) {
-  .button-82-front {
-    font-size: 1.25rem;
-    padding: 12px 42px;
-  }
-}
-
-.button-82-pushable:hover {
-  filter: brightness(110%);
-  -webkit-filter: brightness(110%);
-}
-
-.button-82-pushable:hover .button-82-front {
-  transform: translateY(-6px);
-  transition:
-    transform
-    250ms
-    cubic-bezier(.3, .7, .4, 1.5);
-}
-
-.button-82-pushable:active .button-82-front {
-  transform: translateY(-2px);
-  transition: transform 34ms;
-}
-
-.button-82-pushable:hover .button-82-shadow {
-  transform: translateY(4px);
-  transition:
-    transform
-    250ms
-    cubic-bezier(.3, .7, .4, 1.5);
-}
-
-.button-82-pushable:active .button-82-shadow {
-  transform: translateY(1px);
-  transition: transform 34ms;
-}
-
-.button-82-pushable:focus:not(:focus-visible) {
-  outline: none;
-}
-</style>
+        h1 {
+            font-size: 70px;
+            font-weight: 600;
+            font-family: 'Roboto', sans-serif;
+            color: #b393d3;
+            text-transform: uppercase;
+            text-shadow: 1px 1px 0px #957dad,
+                1px 2px 0px #957dad,
+                1px 3px 0px #957dad,
+                1px 4px 0px #957dad,
+                1px 5px 0px #957dad,
+                1px 6px 0px #957dad,
+                1px 10px 5px rgba(16, 16, 16, 0.5),
+                1px 15px 10px rgba(16, 16, 16, 0.4),
+                1px 20px 30px rgba(16, 16, 16, 0.3),
+                1px 25px 50px rgba(16, 16, 16, 0.2);
+        }
+    </style>
 @endsection

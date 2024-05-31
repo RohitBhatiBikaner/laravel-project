@@ -35,7 +35,7 @@
                         {{$info['name']}}
                       </a>
                 </td>
-                <td>{{$info['mobile']}}</td>
+                <td><a href="tel:{{$info['mobile']}}" >{{$info['mobile']}} </a> </td>
                 <td>{{$info['doj']}}</td>
                 <td>
                     @foreach($info->allcourse as $cid )
