@@ -150,7 +150,17 @@ class StudentController extends Controller
             $student->doj=$request->doj;
             // $student->photo=$request->photo;
             $student->save();
-        
+
+        if(count($request->course_id)>0)
+        $sid=$student->id;
+        studentcourse::where('student_id',$sid)->delete();
+        foreach($request->course_id as $cid){
+             $scinfo=[
+                 'course_id'=>$cid,
+                 'student_id'=>$student->id
+             ];
+              StudentCourse::create($scinfo);
+         }
         return redirect('/student')->with('grt','Data Update Successfully');
     }
 

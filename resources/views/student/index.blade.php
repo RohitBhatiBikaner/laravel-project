@@ -18,11 +18,11 @@
         <thead>
             <tr>
                 <th>S.No</th>
+                <th>Fees</th>
                 <th>Name</th>
                 <th>Mobile</th>
                 <th>Date Of Joining</th>
                 <th>Courses</th>
-                <th>Action</th>
 
             </tr>
         </thead>
@@ -30,6 +30,7 @@
             @foreach ($data as $info)
             <tr>
                 <td>{{$loop->iteration}}</td>
+                <td></td>
                 <td>
                     <a href="/student/{{$info['id']}}/edit"class="link-offset-2 link-underline-opacity-0">
                         {{$info['name']}}
@@ -44,7 +45,7 @@
                     @endforeach
                 </td>
                 
-                <td>
+                {{-- <td>
                     <form method="post" action="/student/{{$info['id']}}">
                         @csrf
                     @method('delete')
@@ -55,7 +56,7 @@
                           Delete
                         </span>
                       </button>
-                         
+                          --}}
                 </form>
                 </td>
             </tr>
