@@ -60,9 +60,12 @@ class CourseController extends Controller
      * @param  \App\Models\course  $course
      * @return \Illuminate\Http\Response
      */
-    public function show(course $course)
+    public function show(course $course,$id)
     {
         //
+        $course=course::find($id);
+        return $course;
+
     }
 
     /**
@@ -85,9 +88,10 @@ class CourseController extends Controller
      * @param  \App\Models\course  $course
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, course $course)
+    public function update(Request $request, course $course,$id)
     {
         //
+        $course->course::find($id);
         $course->name=$request->name;
         $course->fees=$request->fees;
         $course->discount=$request->discount;

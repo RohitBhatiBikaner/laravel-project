@@ -33,7 +33,6 @@ class StudentController extends Controller
         $cdata=course::all(['id','name']);
         return view('student.create',compact('cdata'));
     }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -76,15 +75,26 @@ class StudentController extends Controller
             ];
             student_media::create($isave);
         }
-
+        
         if(count($request->course_id)>0)
-        foreach($request->course_id as $cid){
-           echo $cid;
-            $scinfo=[
-                'course_id'=>$cid,
-                'student_id'=>$obj->id
-            ];
-             StudentCourse::create($scinfo);
+        {
+            foreach($request->course_id as $cid)
+            {
+                $cdtl=course::find($cid);
+              $csinfo=[
+                    'course_id'=>$cid,
+                    'student_id'=>$obj->id,
+                    'name'=>$cdtl->name,
+                    'fees'=>$cdtl->fees,
+                    'discount'=>$cdtl->discount,
+                    'finalprice'=>$cdtl->discount?$cdtl->fees-$cdtl->fees*$cdtl->discount/100:$cdtl->fees
+
+                    ];
+
+                StudentCourse::create($csinfo);
+
+            }
+
         }
         return redirect ('/student')->with('grt','Data Saved Successfully');
     }
@@ -131,7 +141,7 @@ class StudentController extends Controller
             // 'photo'=> 'file|image|mimes:jpeg,jpg|max:2048'
         ]);
         $fileName=$student->photo;
-        if ($request->photo){
+        if ( $request->photo){
             if($fileName){
                 unlink("\photo\$fileaName");
             }
@@ -155,9 +165,15 @@ class StudentController extends Controller
         $sid=$student->id;
         studentcourse::where('student_id',$sid)->delete();
         foreach($request->course_id as $cid){
+            $cdtl=course::find($cid);
              $scinfo=[
                  'course_id'=>$cid,
-                 'student_id'=>$student->id
+                 'student_id'=>$student->id,
+                 'name'=>$cdtl->name,
+                 'fees'=>$cdtl->fees,
+                 'discount'=>$cdtl->discount,
+                 'finalprice'=>$cdtl->discount?$cdtl->fees-$cdtl->fees*$cdtl->discount/100:$cdtl->fees,
+
              ];
               StudentCourse::create($scinfo);
          }
@@ -175,5 +191,17 @@ class StudentController extends Controller
         //
         $student->delete();
         return redirect('/student')->with('err','Data Deleted Successfully');
+    }
+    public function studentcourse($id){
+            $cid=request('name');
+           $sc= StudentCourse::where(['student_id'=>$id,'course_id'=>$cid])->get()[0];
+           $sc->discount=request("discount");
+           $sc->finalprice=request('finalfees');
+           $info=$sc->toArray();
+           array_pop($info);
+           array_pop($info);
+        //    sc->save();
+           $sc->where(['student_id'=>$id,'course_id'=>$cid])->update($info);
+           //return redirect('/student')->with('grt','fees Updated Successfully');
     }
 }

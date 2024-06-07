@@ -18,8 +18,12 @@ return new class extends Migration
             $table->unsignedBigInteger('student_id');
             $table->unsignedBigInteger('course_id');
             $table->primary(['student_id','course_id']);
+            $table->string('name');
+            $table->string('fees');
+            $table->string('discount')->nullable();
+            $table->string('finalprice');
             $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
-            $table->timestamps();
+            $table->timestamps();   
         });
     }  
 
