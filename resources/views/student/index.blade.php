@@ -18,33 +18,33 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>S.No</th>
-                    <th>Fees</th>
-                    <th>Name</th>
-                    <th>Mobile</th>
-                    <th>Date Of Joining</th>
-                    <th>Courses</th>
+            <th>S.No</th>
+            <th>Fees</th>
+            <th>Name</th>
+            <th>Mobile</th>
+            <th>Date Of Joining</th>
+            <th>Courses</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ($data as $info)
+            <tr>
+                <td>{{ $loop->iteration }}</td>
+                <td>
+                    @php
+                    $allcourse=[];
+                    $allcourseid=[];
+                    $firstcourse="";
+                    foreach($info->allcourse as $cid){
+            if(isset($cid['name'])){
+                if(!$firstcourse){
+                    $firstcourse=$cid;
+                }
 
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($data as $info)
-                    <tr>
-                        <td>{{ $loop->iteration }}</td>
-                        <td>
-                            @php
-                            $allcourse=[];
-                            $allcourseid=[];
-                            $firstcourse="";
-                            foreach($info->allcourse as $cid){
-                    if(isset($cid['courseId']['name'])){
-                        if(!$firstcourse){
-                            $firstcourse=$cid['courseId'];
-                        }
-                         $allcourse[]=$cid['courseId']['name'];
-                         $allcourseid[$cid['courseId']['id']]=$cid['courseId']['name'];
-                    }
-                
+                 $allcourse[]=$cid['name'];
+                 $allcourseid[$cid['id']]= $cid['name'];
+                   }
+        
                 }
                      $allcourse=implode(',',$allcourse);
                             @endphp
@@ -64,53 +64,58 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <form method="post" action="/studentcourse/{{$info['id']}}" id="frm_{{$info['id']}}">
+            @csrf
+            @method('patch')
+            <input type="text" name="scid" value="{{$firstcourse->id}}">
         <div class="modal-body">
           
 
-            <div class="container borderd" style="box-shadow: 1px 2px 10px">
-                <h1 class="text-center">Course</h1>
-                @foreach ($errors->all() as $e)
-                    <div class="alert alert-danger">{{ $e }}</div>
-                @endforeach
-                    @csrf
-                    <div class="mb-3">
+    <div class="container borderd" style="box-shadow: 1px 2px 10px">
+        <h1 class="text-center">Course</h1>
+        @foreach ($errors->all() as $e)
+            <div class="alert alert-danger">{{ $e }}</div>
+        @endforeach
+            <div class="mb-3">
+                <label for="cname">Select Course</label>
+                {{-- {{$firstcourse}} --}}
+                  <select  name="name"  class="form-select"  onchange="loadInfo(frm_{{$info['id']}},{{$info['id']}})" id="name" required >
+                   @foreach($allcourseid as $key=>$value)
+                   <option value="{{$key}}">{{$value}}</option>
+                   @endforeach
+   
+   
+               </select>
+                </div>
 
-                        <label for="cname">Select Course</label>
-                        {{$firstcourse}}
-                          <select  name="name"  class="form-select"  onchange="loadInfo(frm_{{$info['id']}})" id="name" required >
-                           @foreach($allcourseid as $key=>$value)
-                           <option value="{{$key}}">{{$value}}</option>
-                           @endforeach
-           
-           
-                       </select>
-                        </div>
-        
-                    <div class="mb-3">
-                        <h4><label for="fees" style="color: #960dad"> Course Fees:</label></h4>
- <input type="number" class="form-control" readonly   name="fees" id="fees"  required>
-                    </div>
-        
-                    <div class="mb-3">
-                        <h4><label for="discount" style="color: #960dad"> Discount:</label></h4>
-                        <input type="number" class="form-control"                       onchange="changefees(frm_{{$info['id']}})"1 onkeyup="changefees(frm_{{$info['id']}})"
-                        min="0" max="100"
-                        name="discount" id="discount" placeholder="Enter Discount">
-                    </div><br>
-        
-                    <div class="mb-3">
-                        <h4><label for="finalprice" style="color: #960dad">Final Fee</label></h4>
-                        <input type="number" 
-                        {{-- value=""{{$firstcourse['fees']-$firstcourse['fees']*$firstcourse['discount']/100}} --}}
-                        onchange="changefees(frm_{{$info['id']}})"
-                        class="form-control" name="finalfees" id="finalfees" placeholder="Enter Final Fees">
-                    </div>
-                   
-        
+            <div class="mb-3">
+                <h4><label for="fees" style="color: #960dad"> Course Fees:</label></h4>
+              <input type="number" class="form-control" readonly 
+              value="{{$firstcourse['fees']}}"   
+              name="fees" id="fees"  required>
             </div>
 
+            <div class="mb-3">
+                <h4><label for="discount" style="color: #960dad"> Discount:</label></h4>
+                <input type="number" class="form-control" 
+                onchange="changefees(frm_{{$info['id']}})" 
+                    value="{{$firstcourse['discount']}}"   
+                onkeyup="changefees(frm_{{$info['id']}})"
+                min="0" max="100"
+                name="discount" id="discount" placeholder="Enter Discount">
+            </div><br>
 
-        </div>
+            <div class="mb-3">
+                <h4><label for="finalprice" style="color: #960dad">Final Fees</label></h4>
+                <input type="number" 
+                value="{{$firstcourse['fees']-$firstcourse['fees']*$firstcourse['discount']/100}}"
+                onchange="changefees2(frm_{{$info['id']}})" 
+                onkeyup="changefees2(frm_{{$info['id']}})" 
+                class="form-control" name="finalfees" id="finalfees" placeholder="Enter Final Fees">
+            </div>
+           
+
+    </div>
+ </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
           <button type="button" class="btn btn-primary">Save changes</button>
@@ -122,42 +127,27 @@
   </div>
 
 
-                     </td>
-                        <td>
-                            <a href="/student/{{ $info['id'] }}/edit"class="link-offset-2 link-underline-opacity-0">
-                                {{ $info['name'] }}
-                            </a>
-                        </td>
-                       
-                        <td><a href="tel:{{ $info['mobile'] }}">{{ $info['mobile'] }} </a> </td>
-                      
-                      
-                        <td>{{ $info['doj'] }}</td>
-                        {{-- <td>
-                          @foreach($info->allcourse as $cid )
-                          {{$cid['courseId']['name']."  , "}}
-                              
-                          @endforeach
-                          </td> --}}
-                          <td>
-                            {{$allcourse}}
-                          </td>
-
-                        {{-- <td>
-                    <form method="post" action="/student/{{$info['id']}}">
-                        @csrf
-                    @method('delete')
-                    <button class="button-82-pushable" role="button" onclick="return confirm('Do You Really Want To Delete')" >
-                        <span class="button-82-shadow"></span>
-                        <span class="button-82-edge"></span>
-                        <span class="button-82-front text">
-                          Delete
-                        </span>
-                      </button>
-                          --}}
-                        </form>
-                        {{-- </td> --}}
-                    </tr>
+    </td>
+       <td>
+           <a href="/student/{{ $info['id'] }}/edit"class="link-offset-2 link-underline-opacity-0">
+               {{ $info['name'] }}
+           </a>
+       </td>
+      
+       <td><a href="tel:{{ $info['mobile'] }}">{{ $info['mobile'] }} </a> </td>
+       <td>{{ $info['doj'] }}</td>
+       
+         <td>
+            @foreach($allcourseid as $key=>$val)
+                <a href="/fees/{{$key}}" class="btn btn-success" >{{$val}}</a>
+            
+            @endforeach
+           {{-- {{$allcourse}} --}}
+         </td>
+     
+       </form>
+     
+   </tr>
                 @endforeach
             </tbody>
         </table>
@@ -278,16 +268,17 @@
         }
     </style>
     <script>
-       function loadInfo(frm){
+       function loadInfo(frm,sid){
 
         
         $.ajax({
-            url:'/course/'+frm.name.value,
+            url:'/course/'+frm.name.value+"/"+sid,
             type:"get",
             success:function(r){
 
                 // console.log(r);
                   frm.fees.value=r.fees;
+                  frm.scid.value=r.id;
                   frm.discount.value=r.discount; 
                   frm.finalfees.value=r.fees-r.fees*r.discount/100;
             }
@@ -302,5 +293,5 @@
     }
   
     </script>
-@endsection
 {{-- value="{{$firstcourse['fees']}}" --}}
+@endsection

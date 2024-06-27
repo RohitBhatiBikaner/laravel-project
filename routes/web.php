@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\FeesController;
 use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,19 +19,25 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-route::resource('/student',StudentController::class);
-//route::resource('/course',CourseController::class);
-Route::get('/course',[CourseController::class,'index']);
-Route::get('/course/create',[CourseController::class,'create']);
-Route::post('/course',[CourseController::class,'store']);
-Route::get('/course/{id}/edit',[CourseController::class,'edit']);
-Route::patch('/course/{id}',[CourseController::class,'update']);
+route::middleware('auth')->group(function(){
 
-route::delete('/course/{id}',[CourseController::class,'destroy']);
-
-Route::get('/course/{id}',[CourseController::class,'show']);
-
-route::get('/studentcourse/(id)',[StudentController::class,'studentcourse']);
+    route::resource('/student',StudentController::class);
+    route::resource('/course',CourseController::class);
+    // Route::get('/course',[CourseController::class,'index']);
+    // Route::get('/course/create',[CourseController::class,'create']);
+    // Route::post('/course',[CourseController::class,'store']);
+    // Route::get('/course/{id}/edit',[CourseController::class,'edit']);
+    // Route::patch('/course/{id}',[CourseController::class,'update']);
+    
+    // route::delete('/course/{id}',[CourseController::class,'destroy']);
+    
+    Route::get('/course/{id}/{sid}',[CourseController::class,'show']);
+    
+    route::get('/studentcourse/{id}',[StudentController::class,'studentcourse']);
+});
+route::get('fees/{id}',[FeesController::class,'create']);
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [App\Http\Controllers\StudentController::class, 'index'])->name('home');
+Route::get('fees/{id}',[FeesController::class,'create']);
+Route::post('fees/',[FeesController::class,'store']);

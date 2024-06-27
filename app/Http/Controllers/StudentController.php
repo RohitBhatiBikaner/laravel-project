@@ -7,6 +7,9 @@ use App\Models\studentcourse;
 use Illuminate\Http\Request;
 use App\Models\course;
 use App\Models\student_media;
+use Illuuminate\Support\Facades\DB;
+use phpunit\Framework\MockObject\Builder\Stub;
+use Intervention\Image\Image;
 
 class StudentController extends Controller
 {
@@ -45,8 +48,14 @@ class StudentController extends Controller
         $request->validate([
             'name'=> "required|min:2|max:40",
             'mobile'=> 'required',
-            //'photo'=> 'required|file|image|mimes:jpeg,jpg|max:2048'
+            // 'photo'=> 'required|file|image|mimes:jpeg,jpg|max:2048'
         ]);
+            // if($request->photo){
+            // $filename= time() . '_' . $request->photo->getClientOriginalName();
+            // Image::make($requset->photo)->save(public_path('photo'.$filename));
+            // Image::make($requset->photo)->resize(150,150)->save(public_path('thumbnail'));
+
+        // }
                 $info=[
             'name' => $request->name,
             'mobile'=>$request->mobile,
@@ -192,16 +201,18 @@ class StudentController extends Controller
         $student->delete();
         return redirect('/student')->with('err','Data Deleted Successfully');
     }
-    public function studentcourse($id){
+    public function studentcourse(){
             $cid=request('name');
-           $sc= StudentCourse::where(['student_id'=>$id,'course_id'=>$cid])->get()[0];
+           $sc= StudentCourse::find(request('scid'));
+            if($sc){
            $sc->discount=request("discount");
            $sc->finalprice=request('finalfees');
            $info=$sc->toArray();
-           array_pop($info);
-           array_pop($info);
-        //    sc->save();
-           $sc->where(['student_id'=>$id,'course_id'=>$cid])->update($info);
-           //return redirect('/student')->with('grt','fees Updated Successfully');
+           unset($info['student_id'],$info['course_id'],$info['created_at'],$info['updated_at']);
+           $sc->update($info);
+           return redirect('/student')->with('grt','fees Updated Successfully');
     }
+    return redirect('/student')->with('error','Student Course Not Found');
+
+}
 }

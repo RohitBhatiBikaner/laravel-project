@@ -11,7 +11,7 @@
     <div class="container borderd" style="box-shadow: 1px 2px 10px">
         <h1 class="text-center ">Student Form</h1>
         @foreach ($errors->all() as $e)
-            <div class="alert alert-danger">{{ $e }}</div>
+            <div class="alert alert-danger">{{ $e }}</div>  
         @endforeach
         <form method="post" action="/student/{{$info['id']}}" enctype="multipart/form-data">
             @csrf

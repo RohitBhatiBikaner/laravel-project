@@ -14,10 +14,10 @@ return new class extends Migration
     public function up()
     {
         Schema::create('studentcourses', function (Blueprint $table) {
-            // $table->id();
+            $table->id();
             $table->unsignedBigInteger('student_id');
             $table->unsignedBigInteger('course_id');
-            $table->primary(['student_id','course_id']);
+            // $table->primary(['student_id','course_id']);
             $table->string('name');
             $table->string('fees');
             $table->string('discount')->nullable();

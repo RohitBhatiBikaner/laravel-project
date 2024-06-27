@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\course;
+use App\Models\studentcourse;
 use Illuminate\Http\Request;
 
 class CourseController extends Controller
@@ -60,10 +61,10 @@ class CourseController extends Controller
      * @param  \App\Models\course  $course
      * @return \Illuminate\Http\Response
      */
-    public function show(course $course,$id)
+    public function show(course $course,$id,$sid)
     {
         //
-        $course=course::find($id);
+       $course=StudentCourse::find($id);
         return $course;
 
     }
@@ -88,15 +89,15 @@ class CourseController extends Controller
      * @param  \App\Models\course  $course
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, course $course,$id)
+    public function update(Request $request, course $course)
     {
         //
-        $course->course::find($id);
         $course->name=$request->name;
-        $course->fees=$request->fees;
-        $course->discount=$request->discount;
-        $course->save();
-        return redirect('/course')->with('grt','Data Update Successfully');
+       $course->fees=$request->fees;
+       $course->discount=$request->discount;
+       $course->save();
+          $course->afterdiscount=$request->afterdiscount;
+       return redirect('/course')->with('grt','Data Updated Successfully');
     }
 
     /**
